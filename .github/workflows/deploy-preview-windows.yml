@@ -1,0 +1,26 @@
+name: Deploy Preview MT5 Agent to Windows
+
+on:
+  push:
+    branches: [preview]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mt5-preview-windows
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    if: github.repository == 'Austin-Texas/windows-mt5-ai-agent' && github.ref == 'refs/heads/preview'
+    runs-on: [self-hosted, Windows, X64, mt5, preview]
+    timeout-minutes: 15
+    steps:
+      - name: Checkout preview
+        uses: actions/checkout@v4
+
+      - name: Deploy agent
+        shell: powershell
+        run: .\scripts\deploy.ps1
